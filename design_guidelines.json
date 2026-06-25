@@ -1,0 +1,115 @@
+{
+  "theme_and_archetype": {
+    "name": "Archetype 5: Luxury (The 'Premium Academic')",
+    "domain": "Education & Learning Platform",
+    "rationale": "To avoid the childish or generic SaaS look, this educational platform takes a 'MasterClass' approach. It feels expensive, cinematic, and moody in dark mode, and crystal-clear in light mode. Color exists to guide action and gamification (XP/badges).",
+    "mode": "hybrid_fullstack with Dark/Light toggle"
+  },
+  "typography": {
+    "fonts": {
+      "headings": {
+        "family": "Outfit",
+        "weight": "font-bold to font-black",
+        "css_import": "@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800;900&display=swap');"
+      },
+      "body": {
+        "family": "Manrope",
+        "weight": "font-normal",
+        "css_import": "@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap');"
+      }
+    },
+    "scale": {
+      "h1": "text-4xl sm:text-5xl lg:text-6xl tracking-tighter leading-none",
+      "h2": "text-2xl sm:text-3xl lg:text-4xl tracking-tight",
+      "h3": "text-xl sm:text-2xl",
+      "body": "text-base leading-relaxed",
+      "labels": "text-xs tracking-[0.2em] uppercase font-semibold"
+    },
+    "rules": [
+      "Never use Inter for headings.",
+      "Always use tracking-tight for headings > 32px.",
+      "Hierarchy Gap Rule: Ensure contrast in font sizes between headers and sub-headers."
+    ]
+  },
+  "color_palette": {
+    "light_mode": {
+      "--background": "240 20% 98%",
+      "--foreground": "240 50% 10%",
+      "--primary": "260 80% 50%",
+      "--primary-foreground": "240 20% 98%",
+      "--border": "240 10% 90%",
+      "--muted": "240 10% 95%",
+      "--card": "0 0% 100%"
+    },
+    "dark_mode": {
+      "--background": "240 50% 4%",
+      "--foreground": "240 20% 98%",
+      "--primary": "260 90% 65%",
+      "--primary-foreground": "240 50% 4%",
+      "--border": "240 30% 15%",
+      "--muted": "240 30% 10%",
+      "--card": "240 40% 6%"
+    },
+    "gamification_colors": {
+      "xp_glow": "drop-shadow-[0_0_12px_rgba(139,92,246,0.6)]",
+      "badge_gold": "text-yellow-400 drop-shadow-[0_0_8px_rgba(250,204,21,0.5)]",
+      "badge_silver": "text-slate-300 drop-shadow-[0_0_8px_rgba(203,213,225,0.5)]"
+    }
+  },
+  "layout_and_spacing": {
+    "spacing_scale": "Use generative padding: p-6 or p-8 inside cards, never cram content. Avoid jagged bottoms.",
+    "dashboard_grid": "MODE B: THE 'CONTROL ROOM' GRID. Tight gaps (gap-4 or gap-6). Widget ratios: 1-col for summaries, 2-col/3-col for main charts. Use h-full to stretch children.",
+    "alignment": "Optical alignment. Left-align dense data, labels, and paragraphs. Avoid centering everything.",
+    "sidebar": "Fixed width w-64, hidden on mobile (use hamburger for mobile). Dark mode sidebar: bg-card with 1px border-r border-border/50."
+  },
+  "surface_strategies": {
+    "dashboard_widgets": "Flat background, 1px subtle border (border-border), NO soft drop shadows. On hover: slight lift (-translate-y-1) with border color darkening/lightening.",
+    "header": "Crystal Glassmorphism if floating (backdrop-blur-xl bg-background/70 with 1px border-b). Or flat solid with hard bottom border.",
+    "ai_chat": "The 'Terminal' look or 'Tactile' variant. Clear distinct bubbles. User bubble: solid primary. AI bubble: muted background. Must have a glowing 'Tracing Beam' effect when AI is typing.",
+    "forms": "Pure HTML layouts + customized Shadcn inputs. Inputs must have clear focus rings (focus:ring-2 focus:ring-primary/50)."
+  },
+  "components": {
+    "shadcn_overrides": [
+      "Do NOT overuse standard Card component boundaries. Go rectangular, dense, and flat.",
+      "Tabs: Override fixed heights (h-9 to h-auto) to prevent content cutoff.",
+      "Charts: Use Shadcn Recharts. Ensure stroke and fill colors use HSL variables."
+    ],
+    "testing": "All interactive elements MUST have data-testid attributes (e.g., data-testid='start-quiz-button', data-testid='chat-input', data-testid='sidebar-nav-link').",
+    "accessibility": "Always set hover states explicitly (hover:bg-primary/90 hover:text-white). Focus states must have higher contrast."
+  },
+  "media_and_assets": {
+    "images": [
+      {
+        "category": "Hero / Onboarding Student Image",
+        "url": "https://images.pexels.com/photos/37811245/pexels-photo-37811245.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+        "description": "Student attentively reading. Use with max-h-[80vh] and a gradient overlay for text contrast."
+      },
+      {
+        "category": "Abstract Background / Texture",
+        "url": "https://images.unsplash.com/photo-1637825891028-564f672aa42c?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA1NTZ8MHwxfHNlYXJjaHwxfHxhYnN0cmFjdCUyMGRlZXAlMjBwdXJwbGUlMjBibHVlJTIwdGV4dHVyZXxlbnwwfHx8fDE3ODI0MDI3Nzl8MA&ixlib=rb-4.1.0&q=85",
+        "description": "Purple wave gradient. Use behind the gamification/XP dashboard header or AI Chat background with opacity-20."
+      },
+      {
+        "category": "Alternate Student / Community",
+        "url": "https://images.pexels.com/photos/7034485/pexels-photo-7034485.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+        "description": "Student sitting at table with books. Good for 'Study Planner' or 'Community' sections."
+      }
+    ],
+    "icons": {
+      "library": "@phosphor-icons/react",
+      "command": "yarn add @phosphor-icons/react",
+      "rationale": "High-end apps and dense dashboards look best with Phosphor's duotone or regular weights."
+    }
+  },
+  "instructions_to_main_agent": [
+    "DO NOT ask for clarification. Follow these guidelines exactly.",
+    "Implement the Layout and Grid exactly as specified (The Control Room pattern).",
+    "Update tailwind.config.js to include Outfit and Manrope in the font-family.",
+    "Update index.css root and .dark variables based on the color_palette.",
+    "Use data-testid on all buttons, links, inputs, and major state-displaying components.",
+    "Implement Web Speech API for AI Chat Voice I/O.",
+    "Build Shadcn charts for Analytics (hours, quiz performance, weak areas).",
+    "Ensure dark/light mode toggle is prominent in the header or sidebar.",
+    "Gamification features (XP, Badges) must be visually prominent and use the specified glow dropshadows."
+  ]
+}

@@ -116,7 +116,10 @@ async def update_badges(user_id: str):
     user = await db.users.find_one({"user_id": user_id}, {"_id": 0})
     if not user:
         return
-    results = await db.quiz_results.find({"user_id": user_id}, {"_id": 0}).to_list(1000)
+    results = await db.quiz_results.find(
+        {"user_id": user_id},
+        {"_id": 0, "score": 1, "date": 1},
+    ).to_list(1000)
     quizzes_taken = len(results)
     perfect_scores = sum(1 for r in results if r.get("score", 0) >= 0.99)
     xp = user.get("xp", 0)
@@ -373,7 +376,10 @@ async def summarize(req: SummarizeReq, user: dict = Depends(get_current_user)):
 @api.get("/dashboard")
 async def dashboard(user: dict = Depends(get_current_user)):
     uid = user["user_id"]
-    results = await db.quiz_results.find({"user_id": uid}, {"_id": 0}).sort("date", -1).to_list(500)
+    results = await db.quiz_results.find(
+        {"user_id": uid},
+        {"_id": 0, "score": 1, "date": 1, "subject": 1, "topic": 1, "level": 1, "correct": 1, "total": 1},
+    ).sort("date", -1).to_list(200)
     chat_count = await db.chat_history.count_documents({"user_id": uid})
     total_quizzes = len(results)
     avg_score = sum(r["score"] for r in results) / total_quizzes if total_quizzes else 0
@@ -431,7 +437,11 @@ async def leaderboard():
 # ---------- Admin ----------
 @api.get("/admin/students")
 async def admin_students(_: dict = Depends(require_admin)):
-    users = await db.users.find({"role": {"$ne": "admin"}}, {"_id": 0, "password_hash": 0}).to_list(500)
+    users = await db.users.find(
+        {"role": {"$ne": "admin"}},
+        {"_id": 0, "user_id": 1, "name": 1, "email": 1, "role": 1, "level": 1, "xp": 1,
+         "badges": 1, "preferred_subjects": 1, "goal": 1, "picture": 1, "created_at": 1},
+    ).to_list(500)
     return {"items": [serialize_user(u) for u in users]}
 
 @api.get("/admin/analytics")
@@ -439,7 +449,7 @@ async def admin_analytics(_: dict = Depends(require_admin)):
     total_users = await db.users.count_documents({"role": {"$ne": "admin"}})
     total_quizzes = await db.quiz_results.count_documents({})
     total_chats = await db.chat_history.count_documents({})
-    results = await db.quiz_results.find({}, {"_id": 0}).to_list(1000)
+    results = await db.quiz_results.find({}, {"_id": 0, "score": 1, "subject": 1}).to_list(2000)
     avg_score = sum(r["score"] for r in results) / len(results) if results else 0
     by_subject: Dict[str, Dict[str, float]] = {}
     for r in results:

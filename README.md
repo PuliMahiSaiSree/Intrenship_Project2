@@ -183,9 +183,3 @@ For other platforms, ensure:
 - [ ] Weekly email digests (Resend) summarising weak topics + next lesson
 - [ ] Replace localStorage JWT with httpOnly session cookies for the custom auth flow
 - [ ] Email verification + password reset
-
----
-
-## License
-
-MIT

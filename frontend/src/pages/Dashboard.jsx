@@ -32,6 +32,7 @@ export default function Dashboard() {
 
     useEffect(() => {
         api.get("/dashboard").then(({ data }) => setData(data)).catch(() => {});
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     if (!data) return <div data-testid="dashboard-loading" className="text-muted-foreground">Loading dashboard…</div>;
@@ -93,7 +94,7 @@ export default function Dashboard() {
                     ) : (
                         <div className="space-y-2">
                             {weak_topics.slice(0, 6).map((t, i) => (
-                                <div key={i} data-testid={`weak-topic-${i}`} className="px-3 py-2 rounded-md bg-destructive/10 border border-destructive/20 text-sm flex items-center gap-2">
+                                <div key={t} data-testid={`weak-topic-${i}`} className="px-3 py-2 rounded-md bg-destructive/10 border border-destructive/20 text-sm flex items-center gap-2">
                                     <Target size={14} weight="duotone" className="text-destructive" />{t}
                                 </div>
                             ))}
@@ -110,8 +111,8 @@ export default function Dashboard() {
                         <div className="text-sm text-muted-foreground">No data yet.</div>
                     ) : (
                         <div className="space-y-3">
-                            {subject_progress.map((s, i) => (
-                                <div key={i}>
+                            {subject_progress.map((s) => (
+                                <div key={s.subject}>
                                     <div className="flex items-center justify-between text-sm mb-1">
                                         <span className="font-semibold">{s.subject}</span>
                                         <span className="text-muted-foreground">{Math.round(s.avg_score * 100)}%</span>
@@ -151,7 +152,7 @@ export default function Dashboard() {
                 {recent_quizzes?.length ? (
                     <div className="space-y-2">
                         {recent_quizzes.map((q, i) => (
-                            <div key={i} className="flex items-center justify-between p-3 rounded-md bg-muted/40 border border-border/60">
+                            <div key={`${q.date}-${q.topic}-${i}`} className="flex items-center justify-between p-3 rounded-md bg-muted/40 border border-border/60">
                                 <div className="text-sm">
                                     <div className="font-semibold">{q.subject} · {q.topic}</div>
                                     <div className="text-xs text-muted-foreground">{new Date(q.date).toLocaleDateString()}</div>

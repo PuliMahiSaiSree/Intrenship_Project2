@@ -28,11 +28,12 @@ export default function Chat() {
         api.get("/meta/subjects").then(({ data }) => { setSubjects(data.subjects); setLevels(data.levels); }).catch(()=>{});
         api.get("/chat/history").then(({ data }) => {
             const items = [...data.items].reverse().flatMap((h) => [
-                { role: "user", text: h.prompt, subject: h.subject },
-                { role: "ai", text: h.response, subject: h.subject },
+                { id: `${h.id}-u`, role: "user", text: h.prompt, subject: h.subject },
+                { id: `${h.id}-a`, role: "ai", text: h.response, subject: h.subject },
             ]);
             setMessages(items);
         }).catch(()=>{});
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     useEffect(() => { listRef.current?.scrollTo({ top: listRef.current.scrollHeight, behavior: "smooth" }); }, [messages, busy]);
@@ -40,15 +41,16 @@ export default function Chat() {
     const send = async () => {
         if (!input.trim() || busy) return;
         const prompt = input.trim();
-        setMessages((m) => [...m, { role: "user", text: prompt }]);
+        const userId = `u-${Date.now()}`;
+        setMessages((m) => [...m, { id: userId, role: "user", text: prompt }]);
         setInput("");
         setBusy(true);
         try {
             const { data } = await api.post("/chat", { subject, level, prompt, model });
-            setMessages((m) => [...m, { role: "ai", text: data.response }]);
+            setMessages((m) => [...m, { id: data.id || `a-${Date.now()}`, role: "ai", text: data.response }]);
         } catch (e) {
             toast.error(e.response?.data?.detail || "AI tutor failed");
-            setMessages((m) => [...m, { role: "ai", text: "Sorry, I couldn't respond. Please try again." }]);
+            setMessages((m) => [...m, { id: `err-${Date.now()}`, role: "ai", text: "Sorry, I couldn't respond. Please try again." }]);
         } finally {
             setBusy(false);
         }
@@ -108,7 +110,7 @@ export default function Chat() {
                     </div>
                 )}
                 {messages.map((m, i) => (
-                    <div key={i} className={`flex gap-3 ${m.role === "user" ? "flex-row-reverse" : ""}`}>
+                    <div key={m.id || `msg-${i}`} className={`flex gap-3 ${m.role === "user" ? "flex-row-reverse" : ""}`}>
                         <div className={`w-8 h-8 rounded-md shrink-0 flex items-center justify-center ${m.role === "user" ? "bg-primary text-primary-foreground" : "bg-muted"}`}>
                             {m.role === "user" ? <UserIcon size={16} weight="duotone" /> : <Robot size={16} weight="duotone" className="text-primary" />}
                         </div>

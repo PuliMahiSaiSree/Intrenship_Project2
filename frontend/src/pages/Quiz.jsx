@@ -147,7 +147,7 @@ export default function Quiz() {
                     </div>
                     <div className="space-y-4">
                         {result.results.map((r, i) => (
-                            <div key={i} className="p-4 rounded-md border border-border/60">
+                            <div key={r.id || `result-${i}`} className="p-4 rounded-md border border-border/60">
                                 <div className="flex items-start gap-2">
                                     {r.correct
                                         ? <CheckCircle size={18} weight="fill" className="text-green-500 mt-0.5" />

@@ -71,7 +71,7 @@ def get_token_from_request(request: Request) -> Optional[str]:
 
 async def get_current_user(request: Request) -> dict:
     """Return user dict, supporting JWT or Google session_token. Raises 401."""
-    from server import db  # late import to avoid circular
+    from database import db
 
     token = get_token_from_request(request)
     if not token:

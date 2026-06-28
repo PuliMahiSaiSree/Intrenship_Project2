@@ -54,8 +54,8 @@ export default function Landing() {
                             { icon: Brain, label: "Smart Quizzes" },
                             { icon: ChartLineUp, label: "Progress Analytics" },
                             { icon: Trophy, label: "Gamified XP" },
-                        ].map((f, i) => (
-                            <div key={i} className="px-4 py-3 border border-border/60 rounded-md flex items-center gap-2.5 hover:border-primary/50 transition-colors">
+                        ].map((f) => (
+                            <div key={f.label} className="px-4 py-3 border border-border/60 rounded-md flex items-center gap-2.5 hover:border-primary/50 transition-colors">
                                 <f.icon size={18} weight="duotone" className="text-primary" />
                                 <span className="text-sm font-semibold">{f.label}</span>
                             </div>

@@ -20,6 +20,7 @@ export default function StudyPlan() {
 
     useEffect(() => {
         api.get("/study-plan/latest").then(({ data }) => { if (data?.plan) setPlan(data.plan); }).catch(()=>{});
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const generate = async () => {
@@ -35,20 +36,26 @@ export default function StudyPlan() {
 
     const downloadPdf = () => {
         if (!plan) return;
-        const html = `<html><head><title>Study Plan</title>
+        const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => (
+            { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]
+        ));
+        const html = `<!doctype html><html><head><meta charset="utf-8"><title>Study Plan</title>
             <style>body{font-family:Manrope,Arial;padding:30px;color:#111}
             h1{font-family:Outfit;font-size:28px} h2{font-family:Outfit;font-size:18px;margin-top:24px}
             .day{border:1px solid #ddd;padding:16px;border-radius:8px;margin-bottom:12px}
             ul{margin:8px 0;padding-left:20px} li{margin:4px 0}</style></head><body>
-            <h1>${subject} · ${level} Study Plan</h1>
-            <p>${plan.summary || ""}</p>
-            ${(plan.days||[]).map(d => `
-                <div class="day"><h2>Day ${d.day}: ${d.title} · ${d.duration_minutes||0} min</h2>
-                <b>Topics:</b><ul>${(d.topics||[]).map(t=>`<li>${t}</li>`).join("")}</ul>
-                <b>Activities:</b><ul>${(d.activities||[]).map(a=>`<li>${a}</li>`).join("")}</ul></div>`).join("")}
+            <h1>${esc(subject)} · ${esc(level)} Study Plan</h1>
+            <p>${esc(plan.summary || "")}</p>
+            ${(plan.days || []).map((d) => `
+                <div class="day"><h2>Day ${esc(d.day)}: ${esc(d.title)} · ${esc(d.duration_minutes || 0)} min</h2>
+                <b>Topics:</b><ul>${(d.topics || []).map((t) => `<li>${esc(t)}</li>`).join("")}</ul>
+                <b>Activities:</b><ul>${(d.activities || []).map((a) => `<li>${esc(a)}</li>`).join("")}</ul></div>`).join("")}
+            <script>window.addEventListener('load', () => setTimeout(() => window.print(), 250));<\/script>
             </body></html>`;
-        const w = window.open("", "_blank");
-        if (w) { w.document.write(html); w.document.close(); w.print(); }
+        const blob = new Blob([html], { type: "text/html" });
+        const url = URL.createObjectURL(blob);
+        window.open(url, "_blank", "noopener,noreferrer");
+        setTimeout(() => URL.revokeObjectURL(url), 60000);
     };
 
     return (
@@ -111,12 +118,12 @@ export default function StudyPlan() {
                                 </div>
                                 {d.topics?.length > 0 && (
                                     <div className="mt-2"><div className="text-[10px] tracking-[0.18em] uppercase font-semibold text-muted-foreground mb-1">Topics</div>
-                                        <ul className="text-sm space-y-0.5">{d.topics.map((t, j) => <li key={j} className="flex gap-2"><BookOpen size={12} weight="duotone" className="text-primary mt-1" />{t}</li>)}</ul>
+                                        <ul className="text-sm space-y-0.5">{d.topics.map((t) => <li key={`topic-${t}`} className="flex gap-2"><BookOpen size={12} weight="duotone" className="text-primary mt-1" />{t}</li>)}</ul>
                                     </div>
                                 )}
                                 {d.activities?.length > 0 && (
                                     <div className="mt-3"><div className="text-[10px] tracking-[0.18em] uppercase font-semibold text-muted-foreground mb-1">Activities</div>
-                                        <ul className="text-sm space-y-0.5">{d.activities.map((a, j) => <li key={j}>• {a}</li>)}</ul>
+                                        <ul className="text-sm space-y-0.5">{d.activities.map((a) => <li key={`act-${a}`}>• {a}</li>)}</ul>
                                     </div>
                                 )}
                             </Card>

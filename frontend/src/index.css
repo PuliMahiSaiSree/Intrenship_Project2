@@ -2,6 +2,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&display=swap');
 
+/* Hide the Emergent watermark badge (overrides external script injection) */
+#emergent-badge { display: none !important; visibility: hidden !important; pointer-events: none !important; }
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
